@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Age Calculator</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  background:#eef2ff;
+  color:#111827;
+  transition:.4s;
+}
+
+body.dark{
+  background:#020617;
+  color:#fff;
+}
+
+.container{
+  width:100%;
+  max-width:450px;
+  padding:25px;
+  border-radius:25px;
+  background:rgba(255,255,255,.9);
+  box-shadow:0 20px 50px rgba(0,0,0,.15);
+  transition:.4s;
+}
+
+body.dark .container{
+  background:#111827;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+}
+
+.header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.logo{
+  font-size:48px;
+  margin-bottom:8px;
+}
+
+h1{
+  font-size:30px;
+  margin-bottom:7px;
+}
+
+.subtitle{
+  color:#6b7280;
+}
+
+body.dark .subtitle{
+  color:#9ca3af;
+}
+
+label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+input{
+  width:100%;
+  padding:15px;
+  border:2px solid #d1d5db;
+  border-radius:12px;
+  font-size:16px;
+  outline:none;
+  margin-bottom:15px;
+  background:white;
+  color:#111827;
+}
+
+input:focus{
+  border-color:#6366f1;
+}
+
+body.dark input{
+  background:#1f2937;
+  color:white;
+  border-color:#374151;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:12px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-bottom:12px;
+  transition:.2s;
+}
+
+.calculate{
+  background:#4f46e5;
+  color:white;
+}
+
+.calculate:hover{
+  background:#4338ca;
+  transform:translateY(-2px);
+}
+
+.mode{
+  background:#e5e7eb;
+  color:#111827;
+}
+
+body.dark .mode{
+  background:#374151;
+  color:white;
+}
+
+.error{
+  text-align:center;
+  color:#ef4444;
+  margin:8px 0;
+}
+
+#result{
+  display:none;
+  margin-top:18px;
+}
+
+.main-result{
+  text-align:center;
+  padding:20px;
+  border-radius:18px;
+  background:#eef2ff;
+  margin-bottom:12px;
+}
+
+body.dark .main-result{
+  background:#1e293b;
+}
+
+.big-age{
+  font-size:32px;
+  font-weight:bold;
+  color:#4f46e5;
+}
+
+body.dark .big-age{
+  color:#818cf8;
+}
+
+.age-details{
+  margin-top:8px;
+  font-size:18px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.card{
+  padding:16px 10px;
+  text-align:center;
+  border-radius:15px;
+  background:#f3f4f6;
+}
+
+body.dark .card{
+  background:#1f2937;
+}
+
+.card-icon{
+  font-size:25px;
+}
+
+.card-title{
+  font-size:13px;
+  color:#6b7280;
+  margin-top:5px;
+}
+
+body.dark .card-title{
+  color:#9ca3af;
+}
+
+.card-value{
+  font-size:18px;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+.birthday{
+  margin-top:12px;
+  padding:18px;
+  text-align:center;
+  border-radius:18px;
+  background:#fef3c7;
+}
+
+body.dark .birthday{
+  background:#422006;
+}
+
+.birthday h2{
+  font-size:20px;
+  margin-bottom:8px;
+}
+
+#birthdayText{
+  font-weight:bold;
+}
+
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="logo">🎂</div>
+    <h1>Age Calculator</h1>
+    <p class="subtitle">Calculate your exact age</p>
+  </div>
+
+  <label for="dob">Date of Birth</label>
+
+  <input type="date" id="dob">
+
+  <button class="calculate" onclick="calculateAge()">
+    ✨ Calculate My Age
+  </button>
+
+  <button class="mode" onclick="toggleDarkMode()" id="modeBtn">
+    🌙 Dark Mode
+  </button>
+
+  <div id="error" class="error"></div>
+
+  <div id="result">
+
+    <div class="main-result">
+      <div class="big-age" id="age"></div>
+      <div class="age-details" id="details"></div>
+    </div>
+
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-icon">📅</div>
+        <div class="card-title">Total Days</div>
+        <div class="card-value" id="days"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">⏰</div>
+        <div class="card-title">Total Hours</div>
+        <div class="card-value" id="hours"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📆</div>
+        <div class="card-title">Total Months</div>
+        <div class="card-value" id="months"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🎈</div>
+        <div class="card-title">Next Birthday</div>
+        <div class="card-value" id="nextAge"></div>
+      </div>
+
+    </div>
+
+    <div class="birthday">
+      <h2>🎉 Next Birthday</h2>
+      <div id="birthdayText"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Age Calculator • Made with ❤️
+  </div>
+
+</div>
+
+<script>
+
+function calculateAge(){
+
+  const input = document.getElementById("dob");
+  const error = document.getElementById("error");
+  const result = document.getElementById("result");
+
+  if(!input.value){
+    error.innerText = "Please select your date of birth.";
+    result.style.display = "none";
+    return;
+  }
+
+  const dob = new Date(input.value + "T00:00:00");
+  const today = new Date();
+
+  if(dob > today){
+    error.innerText = "Date of birth cannot be in the future.";
+    result.style.display = "none";
+    return;
+  }
+
+  error.innerText = "";
+
+  let years = today.getFullYear() - dob.getFullYear();
+  let months = today.getMonth() - dob.getMonth();
+  let days = today.getDate() - dob.getDate();
+
+  if(days < 0){
+    months--;
+
+    const previousMonth =
+      new Date(today.getFullYear(), today.getMonth(), 0);
+
+    days += previousMonth.getDate();
+  }
+
+  if(months < 0){
+    years--;
+    months += 12;
+  }
+
+  const difference = today - dob;
+
+  const totalDays =
+    Math.floor(difference / (1000 * 60 * 60 * 24));
+
+  const totalHours =
+    Math.floor(difference / (1000 * 60 * 60));
+
+  const totalMonths =
+    years * 12 + months;
+
+  document.getElementById("age").innerText =
+    years + " Years";
+
+  document.getElementById("details").innerText =
+    months + " Months • " + days + " Days";
+
+  document.getElementById("days").innerText =
+    totalDays.toLocaleString();
+
+  document.getElementById("hours").innerText =
+    totalHours.toLocaleString();
+
+  document.getElementById("months").innerText =
+    totalMonths.toLocaleString();
+
+  calculateBirthday(dob, today, years);
+
+  result.style.display = "block";
+}
+
+
+function calculateBirthday(dob, today, age){
+
+  let nextBirthday =
+    new Date(
+      today.getFullYear(),
+      dob.getMonth(),
+      dob.getDate()
+    );
+
+  let nextAge = age + 1;
+
+  if(nextBirthday < today){
+
+    nextBirthday =
+      new Date(
+        today.getFullYear() + 1,
+        dob.getMonth(),
+        dob.getDate()
+      );
+  }
+
+  const difference =
+    nextBirthday - today;
+
+  const daysLeft =
+    Math.ceil(
+      difference / (1000 * 60 * 60 * 24)
+    );
+
+  document.getElementById("nextAge").innerText =
+    nextAge + " Years";
+
+  if(daysLeft === 0){
+
+    document.getElementById("birthdayText").innerText =
+      "🎉 Happy Birthday! 🎂";
+
+  }else{
+
+    document.getElementById("birthdayText").innerText =
+      daysLeft + " days left until your birthday 🎈";
+  }
+}
+
+
+function toggleDarkMode(){
+
+  document.body.classList.toggle("dark");
+
+  const button =
+    document.getElementById("modeBtn");
+
+  if(document.body.classList.contains("dark")){
+
+    button.innerText = "☀️ Light Mode";
+
+  }else{
+
+    button.innerText = "🌙 Dark Mode";
+  }
+}
+
+</script>
+
+</body>
+</html>
